@@ -6,7 +6,7 @@ module.exports = {
     handleDeviceHandshake: catchAsyncErrors(async (req, res) => {
         const device = await bindDevice({
             ...req.body,
-            request: req,
+            req: req,
         });
         resHTTP("Handshake Successful", { device }, res, 200);
     }),

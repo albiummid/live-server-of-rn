@@ -1,6 +1,6 @@
 const {
     handleDeviceHandshake,
-} = require("../../../../controllers/http/device.controller");
+} = require("../../../controllers/http/device.controller");
 
 const router = require("express").Router();
 

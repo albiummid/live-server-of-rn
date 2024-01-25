@@ -1,4 +1,9 @@
 const { wildRoutes, nonAuthenticatedRoutes } = require("../app.config");
+const {
+    hasActiveSession,
+    verifyAndDecodeJWT,
+} = require("../services/auth.service");
+const { isDeviceBinded } = require("../services/device.service");
 const { createRequest } = require("../services/request.service");
 const uuid = require("uuid").v4;
 // const {
@@ -10,10 +15,10 @@ const ErrorHandler = require("../utils/errorHandler");
 // Checks if user is authenticated or not
 exports.checkAuth = async (req, res, next) => {
     const route = req.path;
-    const userId = req.headers["x-uuid"];
+    const userId = req.headers["x-uid"];
     const deviceToken = req.headers["x-device-token"];
     req.info = await createRequest({
-        request: req,
+        req: req,
         device_token: deviceToken,
         kind: "Rest API",
         user_id: userId,
@@ -23,6 +28,17 @@ exports.checkAuth = async (req, res, next) => {
     if (wildRoutes.includes(route)) {
         next();
     } else {
+        // check device token
+        const validDevice = await isDeviceBinded(deviceToken);
+        if (!validDevice) {
+            next(
+                new ErrorHandler(
+                    "Device is not binded. Unauthrorize access!",
+                    401
+                )
+            );
+        }
+
         // check if route is in non authenticated routes
         if (!nonAuthenticatedRoutes.includes(route)) {
             // authenticated route
@@ -33,10 +49,33 @@ exports.checkAuth = async (req, res, next) => {
             const sessionToken = auth?.split(" ")[1];
 
             if (![sessionToken, userId, deviceToken].every(Boolean)) {
+                console.log(
+                    `SESSION_TOKEN:${Boolean(sessionToken)}\nUSER_ID:${Boolean(
+                        userId
+                    )}\nDEVICE_TOKEN:${Boolean(deviceToken)}`
+                );
                 next(
                     new ErrorHandler("::__HEADER_PARAMETERS_ARE_MISSING", 400)
                 );
             }
+            const isValidSessionRequest = await hasActiveSession(
+                userId,
+                sessionToken
+            );
+            if (!isValidSessionRequest) {
+                next(
+                    new ErrorHandler(
+                        "This user doesn't have any valid active session",
+                        401
+                    )
+                );
+            }
+
+            const verifiedDecodedToken = verifyAndDecodeJWT(sessionToken);
+            if (!verifiedDecodedToken) {
+                next(new ErrorHandler("Token expired! SignIn again.", 401));
+            }
+
             // const isValidSession = sessionAuthorization({
             //     session_token: sessionToken,
             //     user_id: userId,

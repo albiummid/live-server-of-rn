@@ -59,7 +59,7 @@ const fields = {
             default: null,
         },
     },
-    request: {
+    req: {
         type: String,
         ref: "Request",
         required: true,

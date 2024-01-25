@@ -36,6 +36,10 @@ const fields = {
         type: String,
         required: false,
     },
+    photo: {
+        type: String,
+        default: null,
+    },
     address: {
         type: String,
         required: false,

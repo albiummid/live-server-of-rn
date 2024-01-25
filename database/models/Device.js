@@ -41,7 +41,7 @@ const fields = {
         type: Object,
         default: null,
     },
-    request: {
+    req: {
         type: String,
         ref: "Request",
         required: true,
