@@ -6,4 +6,5 @@ module.exports = {
         "Multiple SignIn": "Multiple SignIn",
         Tempering: "Tempering",
     },
+    friendStatus: {},
 };

@@ -5,6 +5,7 @@ const v2_router = require("express").Router();
 v1_router.use("/auth/device", require("./http/v1/device.router"));
 v1_router.use("/auth", require("./http/v1/auth.router"));
 v1_router.use("/user", require("./http/v1/user.router"));
+v1_router.use("/friend", require("./http/v1/friend.router"));
 
 module.exports = {
     v1_router,

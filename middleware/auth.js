@@ -58,23 +58,23 @@ exports.checkAuth = async (req, res, next) => {
                     new ErrorHandler("::__HEADER_PARAMETERS_ARE_MISSING", 400)
                 );
             }
-            const isValidSessionRequest = await hasActiveSession(
-                userId,
-                sessionToken
-            );
-            if (!isValidSessionRequest) {
-                next(
-                    new ErrorHandler(
-                        "This user doesn't have any valid active session",
-                        401
-                    )
-                );
-            }
+            // const isValidSessionRequest = await hasActiveSession(
+            //     userId,
+            //     sessionToken
+            // );
+            // if (!isValidSessionRequest) {
+            //     next(
+            //         new ErrorHandler(
+            //             "This user doesn't have any valid active session",
+            //             401
+            //         )
+            //     );
+            // }
 
-            const verifiedDecodedToken = verifyAndDecodeJWT(sessionToken);
-            if (!verifiedDecodedToken) {
-                next(new ErrorHandler("Token expired! SignIn again.", 401));
-            }
+            // const verifiedDecodedToken = verifyAndDecodeJWT(sessionToken);
+            // if (!verifiedDecodedToken) {
+            //     next(new ErrorHandler("Token expired! SignIn again.", 401));
+            // }
 
             // const isValidSession = sessionAuthorization({
             //     session_token: sessionToken,
