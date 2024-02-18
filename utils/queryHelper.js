@@ -1,3 +1,4 @@
+const Friend = require("../database/models/Friend");
 const { deepCopy } = require("./helpers");
 
 module.exports = async function (queryModel, queries, options) {
@@ -60,7 +61,6 @@ module.exports = async function (queryModel, queries, options) {
     const limit = Number(queryCopy._limit ?? 10);
     const page = Number(queryCopy._page ?? 1);
     const skip = limit * (page - 1);
-    const totalCount = await queryModel.count();
 
     paginationQuery.limit = limit;
     paginationQuery.skip = skip;
@@ -70,27 +70,22 @@ module.exports = async function (queryModel, queries, options) {
             createdAt: -1,
         };
     }
-
-    let filtered = await queryModel
-        .find({ ...searchQuery }, undefined, options)
-        .sort(sortQuery);
-    let filteredCount = filtered.length;
-
-    let data = await queryModel
+    const data = await queryModel
         .find({ ...searchQuery }, undefined, options)
         .limit(paginationQuery.limit)
         .skip(paginationQuery.skip)
         .sort(sortQuery);
-    const totalPage = Math.ceil(filteredCount / limit);
+
+    const count = data?.length || 0;
+    const pages = Math.ceil(count / limit) || 1;
 
     return {
         meta: {
-            totalCount,
-            filteredCount,
-            totalPage,
+            count,
+            pages,
             page,
             limit,
         },
-        [`list`]: data,
+        list: data,
     };
 };
