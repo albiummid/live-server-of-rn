@@ -1,4 +1,6 @@
 const User = require("../database/models/User");
+const WalletBean = require("../database/models/WalletBean");
+const WalletDiamond = require("../database/models/WalletDiamond");
 const ErrorHandler = require("../utils/errorHandler");
 
 async function createUser({
@@ -9,8 +11,9 @@ async function createUser({
     name,
     roles,
     territory,
+    ...rest
 }) {
-    return await User.create({
+    const user = await User.create({
         auth_kind,
         auth_properties,
         dob,
@@ -18,7 +21,17 @@ async function createUser({
         name,
         roles,
         territory,
+        ...rest,
     });
+
+    await WalletBean.create({
+        owner: user._id,
+    });
+    await WalletDiamond.create({
+        owner: user._id,
+    });
+
+    return user;
 }
 
 async function findUserByUID(_id, enableErrorThrow = false) {
@@ -36,6 +49,7 @@ async function updateBasicInformationOfUserByUID({
     gender,
     phone,
     address,
+    photo,
 }) {
     const user = await findUserByUID(_id, true);
     return await User.findByIdAndUpdate(
@@ -46,6 +60,7 @@ async function updateBasicInformationOfUserByUID({
             gender,
             phone,
             address,
+            photo,
         },
         { new: true, runValidators: true }
     );
