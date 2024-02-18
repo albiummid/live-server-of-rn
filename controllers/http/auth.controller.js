@@ -19,6 +19,15 @@ module.exports = {
         resHTTP("You are logged in !", authData, res, 200);
     }),
     handleUserLogout: catchAsyncErrors(async (req, res) => {
-        await logoutUser({ req });
+        const signout = await logoutUser({ req });
+        console.log(signout);
+        resHTTP(
+            "You are logged out..",
+            {
+                logout_success: signout,
+            },
+            res,
+            200
+        );
     }),
 };

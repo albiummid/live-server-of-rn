@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../database/models/User");
 const { terminationKinds } = require("../data/enums");
 const ErrorHandler = require("../utils/errorHandler");
+const { createUser } = require("./user.service");
 const getSeesionStartLog = (req) => {
     return {
         at: Date.now(),
@@ -66,7 +67,7 @@ const signInWithGoogle = async ({ req, properties }) => {
     });
     if (!user) {
         // NEW USER
-        user = await User.create({
+        user = await createUser({
             auth_kind: "Google",
             auth_properties: properties,
             email: properties.email,
@@ -100,7 +101,7 @@ const signInWithFacebook = async ({ req, properties }) => {
     });
     if (!user) {
         // NEW USER
-        user = await User.create({
+        user = await createUser({
             auth_kind: "Facebook",
             auth_properties: properties,
             email: properties.email,
