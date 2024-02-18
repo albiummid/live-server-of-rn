@@ -1,13 +1,41 @@
+const Friend = require("../../database/models/Friend");
 const catchAsyncErrors = require("../../middleware/catchAsyncErrors");
 const {
     sendFriendRequest,
     acceptFriendRequest,
     rejectFriendRequest,
     getFriendship,
+    getFriendsCount,
+    getFriendList,
+    getFriendRequestList,
+    getOwnFriendRequestedList,
+    getFriendRequestSendList,
+    getFriendRequestReceiveList,
+    cancelFriendRequest,
 } = require("../../services/friend.service");
+const queryHelper = require("../../utils/queryHelper");
 const resHTTP = require("../../utils/resHTTP");
 
 module.exports = {
+    handleGetFriends: catchAsyncErrors(async (req, res) => {
+        const data = await getFriendList(req.params.userId, req.query);
+        resHTTP("Friend list", data, res, 200);
+    }),
+    handleGetSendFriendRequestList: catchAsyncErrors(async (req, res) => {
+        const data = await getFriendRequestSendList(
+            req.params.userId,
+            req.query
+        );
+
+        resHTTP("Friend request list", data, res, 200);
+    }),
+    handleGetReceivedFriendRequestList: catchAsyncErrors(async (req, res) => {
+        const data = await getFriendRequestReceiveList(
+            req.params.userId,
+            req.query
+        );
+        resHTTP("Friend list", data, res, 200);
+    }),
     handleSendFriendRequest: catchAsyncErrors(async (req, res) => {
         const request = await sendFriendRequest(
             req.body.senderId,
@@ -37,7 +65,7 @@ module.exports = {
         resHTTP("Friend request rejected", request, res, 201);
     }),
     handleCancelFriendRequest: catchAsyncErrors(async (req, res) => {
-        const request = await rejectFriendRequest(
+        const request = await cancelFriendRequest(
             req.body.requestId,
             req.body.acceptorId
         );
@@ -45,6 +73,10 @@ module.exports = {
     }),
     handleGetFriendshipStatus: catchAsyncErrors(async (req, res) => {
         const request = await getFriendship(req.body.uid1, req.body.uid2);
-        resHTTP("Friend request cancelled", request, res, 201);
+        resHTTP("Friendship status", request, res, 201);
+    }),
+    handleGetFriendsCount: catchAsyncErrors(async (req, res) => {
+        const request = await getFriendsCount(req.params.userId);
+        resHTTP("Friend count", { friend_count: request }, res, 201);
     }),
 };
