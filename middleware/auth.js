@@ -58,6 +58,8 @@ exports.checkAuth = async (req, res, next) => {
                     new ErrorHandler("::__HEADER_PARAMETERS_ARE_MISSING", 400)
                 );
             }
+
+            // TODO: after validating sessionToken must crossmatch the device token with the current request and the device token from sessionToken;
             // const isValidSessionRequest = await hasActiveSession(
             //     userId,
             //     sessionToken

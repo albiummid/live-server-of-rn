@@ -9,6 +9,7 @@ const { ws_manager } = require("./routes/WS");
 const User = require("./database/models/User");
 const { checkAuth } = require("./middleware/auth");
 const { v1_router, v2_router } = require("./routes/http");
+const { initVault } = require("./services/vault.service");
 
 const app = express();
 const httpApp = http.createServer(app);
@@ -53,6 +54,7 @@ const StartServer = () => {
         );
     });
     ws_manager(io);
+    initVault();
 };
 
 connectDB().then(() => {
