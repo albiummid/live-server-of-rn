@@ -1,4 +1,5 @@
 const dotenv = require("dotenv");
+const { getLocalServerIp } = require("./utils/helpers");
 dotenv.config();
 const NODE_ENV = process.env.NODE_ENV || "development";
 const PORT = process.env.PORT || 5000;
@@ -28,5 +29,5 @@ module.exports = {
         name: "digo_live_db",
         database_url: "mongodb://127.0.0.1:27017/digo_live_db",
     },
-    apiURI: `http://localhost:${PORT}`,
+    apiURI: `http://${getLocalServerIp()}:${PORT}/api`,
 };

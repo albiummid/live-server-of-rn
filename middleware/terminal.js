@@ -7,7 +7,7 @@ const initTerminal = () => {
     console.log(` ## PORT ::\t\t ${PORT}`);
     console.log(` ## Database:: \t\t MongoDB`);
     console.log(` ## Environment :: \t ${NODE_ENV}`);
-    console.log(` ## API URI :: \t\t ${apiURI}\n`);
+    console.log(` ## Local API URI :: \t ${apiURI}\n`);
 };
 
 const clear = () => {

@@ -21,6 +21,29 @@ const fields = {
         type: String,
         default: null,
     },
+    details:{
+        brand:{
+            type:String,
+        default:null
+        },
+        model:{
+            type:String,
+        default:null
+        },
+        unique_id:{
+            type:String,
+            default:null
+        },
+        build_id:{
+            type:String,
+            default:null
+        },
+        device_fingerprint:{
+            type:String,
+            default:null
+        },
+
+    },
     fid: {
         type: String,
         default: null,

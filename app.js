@@ -10,6 +10,7 @@ const User = require("./database/models/User");
 const { checkAuth } = require("./middleware/auth");
 const { v1_router, v2_router } = require("./routes/http");
 const { initVault } = require("./services/vault.service");
+const { getLocalIpAddresses, getLocalServerIp } = require("./utils/helpers");
 
 const app = express();
 const httpApp = http.createServer(app);
@@ -30,6 +31,11 @@ app.use(morgan("dev"));
 // Routes
 app.use("/api/v1", [checkAuth, v1_router]);
 app.use("/api/v2", [checkAuth, v2_router]);
+
+// API Documentation
+app.get('/api-doc', async(req, res) => {
+    res.sendFile(require('path').join(__dirname, 'api_documentation.md'));
+});
 app.use(errorMiddleware);
 
 // Handling Uncaught Exception

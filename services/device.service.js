@@ -3,6 +3,7 @@ const uuid = require("uuid").v4;
 
 const bindDevice = async ({
     req,
+    details,
     advertisement_id,
     app_set_id,
     fcm_token,
@@ -15,6 +16,7 @@ const bindDevice = async ({
     return await Device.create({
         req: req.info._id,
         advertisement_id,
+        details,
         app_set_id,
         device_token: uuid(),
         fcm_token,
