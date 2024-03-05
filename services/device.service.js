@@ -13,19 +13,23 @@ const bindDevice = async ({
     properties,
     source,
 }) => {
-    return await Device.create({
-        req: req.info._id,
-        advertisement_id,
-        details,
-        app_set_id,
-        device_token: uuid(),
-        fcm_token,
-        fid,
-        kind,
-        local_id,
-        properties,
-        source,
-    });
+    let device = isAlreadyBindedDevice(local_id);
+    if (!device) {
+        device = await Device.create({
+            req: req.info._id,
+            advertisement_id,
+            details,
+            app_set_id,
+            device_token: uuid(),
+            fcm_token,
+            fid,
+            kind,
+            local_id,
+            properties,
+            source,
+        });
+    }
+    return device;
 };
 
 const isDeviceBinded = async (token) => {
@@ -35,8 +39,21 @@ const isDeviceBinded = async (token) => {
         })) !== null
     );
 };
+const isAlreadyBindedDevice = async (local_id) => {
+    return await Device.findOne({
+        local_id,
+    });
+};
+
+const getDeviceByDeviceToken = async (device_token) => {
+    return await Device.findOne({
+        device_token,
+    });
+};
 
 module.exports = {
     bindDevice,
     isDeviceBinded,
+    isAlreadyBindedDevice,
+    getDeviceByDeviceToken,
 };

@@ -50,13 +50,6 @@ module.exports = {
         );
         resHTTP("Friend request accepted", request, res, 201);
     }),
-    handleAcceptFriendRequest: catchAsyncErrors(async (req, res) => {
-        const request = await acceptFriendRequest(
-            req.body.requestId,
-            req.body.acceptorId
-        );
-        resHTTP("Friend request accepted", request, res, 201);
-    }),
     handleRejectFriendRequest: catchAsyncErrors(async (req, res) => {
         const request = await rejectFriendRequest(
             req.body.requestId,
@@ -67,16 +60,16 @@ module.exports = {
     handleCancelFriendRequest: catchAsyncErrors(async (req, res) => {
         const request = await cancelFriendRequest(
             req.body.requestId,
-            req.body.acceptorId
+            req.body.senderId
         );
         resHTTP("Friend request cancelled", request, res, 201);
     }),
     handleGetFriendshipStatus: catchAsyncErrors(async (req, res) => {
         const request = await getFriendship(req.body.uid1, req.body.uid2);
-        resHTTP("Friendship status", request, res, 201);
+        resHTTP("Friendship status", request, res, 200);
     }),
     handleGetFriendsCount: catchAsyncErrors(async (req, res) => {
-        const request = await getFriendsCount(req.params.userId);
-        resHTTP("Friend count", { friend_count: request }, res, 201);
+        const data = await getFriendsCount(req.params.userId);
+        resHTTP("Friend count", { count: data }, res, 200);
     }),
 };

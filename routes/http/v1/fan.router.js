@@ -9,7 +9,7 @@ const {
 const router = require("express").Router();
 
 router.get("/count/:celebrityUID", handleGetFanCount);
-router.get("/followers/:celebrityUID", handleGetFans);
+router.get("/list/:celebrityUID", handleGetFans);
 router.get("/check-is-fan/:celebrityUID/:followerId", handleGetIsFan);
 router.post("/be-fan", handleBeFan);
 router.post("/be-unfan", handleBeUnFan);

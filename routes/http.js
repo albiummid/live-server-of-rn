@@ -10,6 +10,7 @@ v1_router.use("/follow", require("./http/v1/follow.router"));
 v1_router.use("/fan", require("./http/v1/fan.router"));
 v1_router.use("/vault", require("./http/v1/vault.router"));
 v1_router.use("/wallet", require("./http/v1/wallet.router"));
+v1_router.use("/conversation", require("./http/v1/conversation.router"));
 
 module.exports = {
     v1_router,

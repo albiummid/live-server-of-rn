@@ -4,6 +4,6 @@ module.exports = async (message, data, resFunction, statusCode) => {
         status: statusCode,
         message,
         error: null,
-        data,
+        result: data,
     });
 };

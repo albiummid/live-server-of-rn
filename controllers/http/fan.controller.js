@@ -15,7 +15,7 @@ module.exports = {
     }),
     handleGetFanCount: catchAsyncErrors(async (req, res) => {
         const data = await getFanCount(req.params.celebrityUID);
-        resHTTP("Fan count", data, res, 200);
+        resHTTP("Fan count", { count: data }, res, 200);
     }),
     handleGetIsFan: catchAsyncErrors(async (req, res) => {
         const data = await getIsFan(req.params.celebrityUID, req.params.fanUID);

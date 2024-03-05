@@ -15,7 +15,7 @@ module.exports = {
     }),
     handleGetFollowerCount: catchAsyncErrors(async (req, res) => {
         const data = await getFollowerCount(req.params.followeeId);
-        resHTTP("Follower count", data, res, 200);
+        resHTTP("Follower count", { count: data }, res, 200);
     }),
     handleGetIsFollowing: catchAsyncErrors(async (req, res) => {
         const data = await getIsFollowing(
