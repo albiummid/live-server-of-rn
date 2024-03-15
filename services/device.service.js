@@ -13,7 +13,7 @@ const bindDevice = async ({
     properties,
     source,
 }) => {
-    let device = isAlreadyBindedDevice(local_id);
+    let device = await isAlreadyBindedDevice(local_id);
     if (!device) {
         device = await Device.create({
             req: req.info._id,
@@ -29,6 +29,7 @@ const bindDevice = async ({
             source,
         });
     }
+    console.log(device);
     return device;
 };
 

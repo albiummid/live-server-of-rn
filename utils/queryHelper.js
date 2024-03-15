@@ -76,7 +76,10 @@ module.exports = async function (queryModel, queries, options) {
         .skip(paginationQuery.skip)
         .sort(sortQuery);
 
-    const count = data?.length || 0;
+    const count =
+        (await queryModel.find({ ...searchQuery }, undefined, options))
+            .length || 0;
+    console.log(count);
     const pages = Math.ceil(count / limit) || 1;
 
     return {

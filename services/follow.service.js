@@ -1,26 +1,29 @@
 const Follow = require("../database/models/Follow");
 const ErrorHandler = require("../utils/errorHandler");
 const queryHelper = require("../utils/queryHelper");
+const getFollowers = async function (followeeId, query = {}) {
+    return await queryHelper(Follow, { followee: followeeId, ...query });
+};
+
+const getFollowerCount = async function (followeeId) {
+    return await Follow.countDocuments({ followee: followeeId });
+};
+
+const getIsFollowing = async function (followeeId, followerId) {
+    return Boolean(
+        await Follow.findOne({
+            followee: followeeId,
+            follower: followerId,
+        })
+    );
+};
 
 module.exports = {
-    getFollowers: async function (followeeId, query = {}) {
-        return await queryHelper(Follow, { followee: followeeId, ...query });
-    },
-    getFollowerCount: async function (followeeId) {
-        return await Follow.countDocuments({ followee: followeeId });
-    },
-    getIsFollowing: async function (followeeId, followerId) {
-        return {
-            isFollowing: Boolean(
-                await Follow.findOne({
-                    followee: followeeId,
-                    follower: followerId,
-                })
-            ),
-        };
-    },
+    getFollowers,
+    getFollowerCount,
+    getIsFollowing,
     doFollow: async function (followeeId, followerId) {
-        if ((await this.getIsFollowing(followeeId, followerId)).isFollowing) {
+        if ((await getIsFollowing(followeeId, followerId)).isFollowing) {
             throw new ErrorHandler("Already following", 400);
         }
         return await Follow.create({

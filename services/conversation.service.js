@@ -17,7 +17,19 @@ const getConversationMessages = async (conversationId, query) => {
     });
 };
 
-const getConversationByUIDs = async(uid1, uid2);
+const getConversationByUIDs = async (uid1, uid2) => {
+    return await Conversation.findOne(
+        {
+            uid_pair: {
+                $in: [uid1, uid2],
+            },
+        },
+        null,
+        {
+            populate: ["uid_pair"],
+        }
+    );
+};
 
 const createConversation = async (uid1, uid2) => {
     return await Conversation.create({
@@ -66,6 +78,12 @@ const deleteConversationMessage = async (cmId) => {
     };
 };
 
+const getConversatioById = async (id) => {
+    return await Conversation.findById(id, null, {
+        populate: ["uid_pair"],
+    });
+};
+
 module.exports = {
     deleteConveration,
     deleteConversationMessage,
@@ -74,4 +92,6 @@ module.exports = {
     createConversation,
     getUserConversations,
     getConversationMessages,
+    getConversationByUIDs,
+    getConversatioById,
 };

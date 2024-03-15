@@ -1,3 +1,4 @@
+const { Mongoose } = require("mongoose");
 const Friend = require("../database/models/Friend");
 const ErrorHandler = require("../utils/errorHandler");
 const queryHelper = require("../utils/queryHelper");
@@ -43,6 +44,7 @@ const getFriendsCount = async (userId) => {
         uid_pair: {
             $in: [userId],
         },
+        status: "Accepted",
     });
 };
 
@@ -91,36 +93,64 @@ const cancelFriendRequest = async (requestId, senderId) => {
     return true;
 };
 
-const getFriendship = async (senderId, receiverId) => {
+const getFriendship = async (uid1, uid2) => {
     return await Friend.findOne({
         uid_pair: {
-            $all: [senderId, receiverId], //$in like OR  -- $all like AND
+            $all: [uid1, uid2], //$in like OR  -- $all like AND
         },
     });
 };
 
 const getFriendList = async (userId, query = {}) => {
-    return await queryHelper(Friend, {
-        status: "Accepted",
-        uid_pair: {
-            $in: [userId],
+    return await queryHelper(
+        Friend,
+        {
+            status: "Accepted",
+            uid_pair: {
+                $in: [userId],
+            },
+            ...query,
         },
-        ...query,
-    });
+        {
+            populate: ["uid_pair"],
+        }
+    );
 };
 const getFriendRequestReceiveList = async (userId, query = {}) => {
-    return await queryHelper(Friend, {
-        status: "Pending",
-        request_receiver: userId,
-        ...query,
-    });
+    console.log(query, "L");
+    return await queryHelper(
+        Friend,
+        {
+            status: "Pending",
+            request_receiver: userId,
+            ...query,
+        },
+        {
+            populate: ["request_sender"],
+        }
+    );
 };
 const getFriendRequestSendList = async (userId, query = {}) => {
-    return await queryHelper(Friend, {
-        status: "Pending",
-        request_sender: userId,
-        ...query,
-    });
+    return await queryHelper(
+        Friend,
+        {
+            status: "Pending",
+            request_sender: userId,
+            ...query,
+        },
+        {
+            populate: ["request_receiver"],
+        }
+    );
+};
+
+const doUnfriend = async (uid1, uid2) => {
+    const friendship = await getFriendship(uid1, uid2);
+    if (!friendship) {
+        throw new ErrorHandler("No friendship found", 404);
+    }
+    const deleted = Boolean(await Friend.findByIdAndDelete(friendship._id));
+    return deleted;
 };
 
 module.exports = {
@@ -133,4 +163,5 @@ module.exports = {
     acceptFriendRequest,
     rejectFriendRequest,
     getFriendsCount,
+    doUnfriend,
 };

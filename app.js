@@ -22,6 +22,8 @@ const io = new Server(httpApp, {
     path: "",
 });
 
+global.io = io;
+
 // SERVER
 require("dotenv").config();
 app.use(express.json());
@@ -33,8 +35,8 @@ app.use("/api/v1", [checkAuth, v1_router]);
 app.use("/api/v2", [checkAuth, v2_router]);
 
 // API Documentation
-app.get('/api-doc', async(req, res) => {
-    res.sendFile(require('path').join(__dirname, 'api_documentation.md'));
+app.get("/api/doc", async (req, res) => {
+    res.sendFile(require("path").join(__dirname, "api_documentation.md"));
 });
 app.use(errorMiddleware);
 
@@ -63,6 +65,12 @@ const StartServer = () => {
     initVault();
 };
 
-connectDB().then(() => {
-    StartServer();
-});
+connectDB()
+    .then(() => {
+        StartServer();
+    })
+    .catch((err) => {
+        console.log(
+            `App couldn't start cause of DATABASE initialization failure ~!`
+        );
+    });

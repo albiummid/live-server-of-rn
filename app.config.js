@@ -12,22 +12,34 @@ const schemaOptions = {
     },
 };
 
+const isDevENV = NODE_ENV === "development";
+
+const getENV = (prodValue, devValue) => {
+    return isDevENV ? devValue : prodValue;
+};
+const domain = getENV("https://albiummid.server.dev", getLocalServerIp());
+
 module.exports = {
     NODE_ENV,
     PORT,
     JWT_SECRET,
-    wildRoutes: ["/auth/device/resolve", "/auth/device/handshake"],
-    nonAuthenticatedRoutes: [
-        "/auth/signIn/google",
-        "/auth/signIn/facebook",
-        // "/auth/sign-up/credential",
+    wildRoutes: [
+        "/auth/device/resolve",
+        "/auth/device/handshake",
+        "/check/status/generate-204",
     ],
+    nonAuthenticatedRoutes: ["/auth/signIn/google", "/auth/signIn/facebook"],
     appName: "Digo_Live_SERVER",
     schemaOptions,
     database: {
         provider: "MongoDB",
         name: "digo_live_db",
-        database_url: "mongodb://127.0.0.1:27017/digo_live_db",
+        database_url: getENV(
+            "mongodb://127.0.0.1:27017/digo_live_db",
+            "mongodb://127.0.0.1:27017/digo_live_db"
+        ),
     },
-    apiURI: `http://${getLocalServerIp()}:${PORT}/api`,
+    apiURI: `http://${domain}:${PORT}/api`,
+    doc_url: `http://${domain}:${PORT}/api/doc`,
+    api_check_url: `http://${domain}:${PORT}/api/v1/check/status/generate-204`,
 };

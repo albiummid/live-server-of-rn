@@ -12,6 +12,7 @@ const {
     getFriendRequestSendList,
     getFriendRequestReceiveList,
     cancelFriendRequest,
+    doUnfriend,
 } = require("../../services/friend.service");
 const queryHelper = require("../../utils/queryHelper");
 const resHTTP = require("../../utils/resHTTP");
@@ -71,5 +72,9 @@ module.exports = {
     handleGetFriendsCount: catchAsyncErrors(async (req, res) => {
         const data = await getFriendsCount(req.params.userId);
         resHTTP("Friend count", { count: data }, res, 200);
+    }),
+    handleDoUnfriend: catchAsyncErrors(async (req, res) => {
+        const data = await doUnfriend(req.body.uid1, req.body.uid2);
+        resHTTP("Unfriend", data, res, 200);
     }),
 };

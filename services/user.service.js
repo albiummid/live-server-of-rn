@@ -2,6 +2,7 @@ const User = require("../database/models/User");
 const WalletBean = require("../database/models/WalletBean");
 const WalletDiamond = require("../database/models/WalletDiamond");
 const ErrorHandler = require("../utils/errorHandler");
+const queryHelper = require("../utils/queryHelper");
 
 async function createUser({
     auth_kind,
@@ -65,9 +66,13 @@ async function updateBasicInformationOfUserByUID({
         { new: true, runValidators: true }
     );
 }
+const getUserList = async (query) => {
+    return queryHelper(User, query);
+};
 
 module.exports = {
     createUser,
     findUserByUID,
     updateBasicInformationOfUserByUID,
+    getUserList,
 };

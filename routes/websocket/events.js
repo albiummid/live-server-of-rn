@@ -1,3 +1,5 @@
+const eventNames = require("../../keys/eventNames");
+
 function createEvent(event = "", controller = () => {}, logger = () => {}) {
     return {
         event,
@@ -16,4 +18,5 @@ module.exports = [
             console.log("HELLO_LOGGER_TESTING_!@#");
         }
     ),
+    createEvent(eventNames.seen_message()),
 ];

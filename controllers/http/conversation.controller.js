@@ -1,3 +1,4 @@
+const eventNames = require("../../keys/eventNames");
 const catchAsyncErrors = require("../../middleware/catchAsyncErrors");
 const {
     getConversationMessages,
@@ -6,6 +7,8 @@ const {
     deleteConversationMessage,
     getUserConversations,
     sendMessage,
+    getConversationByUIDs,
+    getConversatioById,
 } = require("../../services/conversation.service");
 const resHTTP = require("../../utils/resHTTP");
 
@@ -17,7 +20,11 @@ module.exports = {
             conversation_id: req.body.conversation_id,
             owner: req.body.owner,
         });
-        resHTTP("Conversation", data, res, 200);
+        const conversation = await getConversatioById(data.conversation_id);
+        io.emit(eventNames.receive_conversation_message(conversation._id), {
+            message: data,
+        });
+        resHTTP("Message sent", data, res, 200);
     }),
     handleGetConversationMessages: catchAsyncErrors(async (req, res) => {
         const data = await getConversationMessages(
@@ -25,6 +32,13 @@ module.exports = {
             req.query
         );
         resHTTP("Conversation Message List", data, res, 200);
+    }),
+    handleGetConversationByUIDs: catchAsyncErrors(async (req, res) => {
+        const data = await getConversationByUIDs(
+            req.params.uid1,
+            req.params.uid2
+        );
+        resHTTP("Conversation", data, res, 200);
     }),
     handleGetConversations: catchAsyncErrors(async (req, res) => {
         const data = await getUserConversations(req.params.userId, req.query);

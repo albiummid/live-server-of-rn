@@ -11,6 +11,7 @@ v1_router.use("/fan", require("./http/v1/fan.router"));
 v1_router.use("/vault", require("./http/v1/vault.router"));
 v1_router.use("/wallet", require("./http/v1/wallet.router"));
 v1_router.use("/conversation", require("./http/v1/conversation.router"));
+v1_router.use("/check", require("./http/v1/check.router"));
 
 module.exports = {
     v1_router,

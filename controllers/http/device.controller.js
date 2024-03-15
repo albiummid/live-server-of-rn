@@ -8,6 +8,8 @@ module.exports = {
             ...req.body,
             req: req,
         });
-        resHTTP("Handshake Successful", { device }, res, 200);
+        console.log(req.body);
+
+        resHTTP("Handshake Successful", device, res, 200);
     }),
 };

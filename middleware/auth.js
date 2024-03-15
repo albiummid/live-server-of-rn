@@ -23,6 +23,7 @@ exports.checkAuth = async (req, res, next) => {
         kind: "Rest API",
         user_id: userId,
     });
+    console.log(deviceToken);
 
     // check if route is in wild routes
     if (wildRoutes.includes(route)) {

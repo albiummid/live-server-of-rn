@@ -2,6 +2,7 @@ const catchAsyncErrors = require("../../middleware/catchAsyncErrors");
 const {
     findUserByUID,
     updateBasicInformationOfUserByUID,
+    getUserList,
 } = require("../../services/user.service");
 const resHTTP = require("../../utils/resHTTP");
 
@@ -16,5 +17,9 @@ module.exports = {
             ...req.body,
         });
         resHTTP("User info updated", user, res, 200);
+    }),
+    handleGetUserList: catchAsyncErrors(async (req, res) => {
+        const data = await getUserList(req.query);
+        resHTTP("User found", data, res, 200);
     }),
 };

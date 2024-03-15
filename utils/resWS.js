@@ -5,7 +5,7 @@ const resWS = {
                 status: "Success",
                 error: {},
                 message,
-                data,
+                result: data,
             };
         },
         error: (message, error) => {
@@ -13,7 +13,7 @@ const resWS = {
                 status: "Error",
                 error,
                 message,
-                data: {},
+                result: {},
             };
         },
     },
